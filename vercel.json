@@ -1,0 +1,14 @@
+{
+  "buildCommand": "cd pharma_nexus_frontend && npm install && npm run build",
+  "outputDirectory": "pharma_nexus_frontend/dist",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://medcare-pharmanexus.onrender.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
