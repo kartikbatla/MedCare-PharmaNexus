@@ -1,0 +1,602 @@
+{
+  "MED001": [
+    {
+      "week": "May 25",
+      "demand": 50730,
+      "actual": 51400,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 49975,
+      "actual": 48967,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 49013,
+      "actual": 52663,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 49385,
+      "actual": 49317,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 49210,
+      "actual": 48570,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 47484,
+      "actual": 50280,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 47075,
+      "actual": 49987,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 48503,
+      "actual": 48177,
+      "ili": 2.7
+    }
+  ],
+  "MED002": [
+    {
+      "week": "May 25",
+      "demand": 24624,
+      "actual": 25104,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 24257,
+      "actual": 24595,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 23508,
+      "actual": 24178,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 23722,
+      "actual": 26238,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 23229,
+      "actual": 22946,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 22555,
+      "actual": 24153,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 22486,
+      "actual": 26129,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 22899,
+      "actual": 23413,
+      "ili": 2.7
+    }
+  ],
+  "MED003": [
+    {
+      "week": "May 25",
+      "demand": 17680,
+      "actual": 17550,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 17224,
+      "actual": 17774,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 17155,
+      "actual": 17384,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 16801,
+      "actual": 18032,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 16959,
+      "actual": 16564,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 16449,
+      "actual": 17200,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 16303,
+      "actual": 18639,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 16460,
+      "actual": 16754,
+      "ili": 2.7
+    }
+  ],
+  "MED004": [
+    {
+      "week": "May 25",
+      "demand": 10496,
+      "actual": 11443,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 10658,
+      "actual": 10709,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 10366,
+      "actual": 10441,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 9984,
+      "actual": 10752,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 10107,
+      "actual": 10543,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 9984,
+      "actual": 10018,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 9885,
+      "actual": 10370,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 9606,
+      "actual": 10420,
+      "ili": 2.7
+    }
+  ],
+  "MED005": [
+    {
+      "week": "May 25",
+      "demand": 16321,
+      "actual": 17001,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 16179,
+      "actual": 16685,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 16190,
+      "actual": 16832,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 16146,
+      "actual": 15885,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 15493,
+      "actual": 15736,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 15588,
+      "actual": 16811,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 15511,
+      "actual": 15912,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 15204,
+      "actual": 16341,
+      "ili": 2.7
+    }
+  ],
+  "MED006": [
+    {
+      "week": "May 25",
+      "demand": 8776,
+      "actual": 8876,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 9023,
+      "actual": 8812,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 8484,
+      "actual": 8183,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 8183,
+      "actual": 10471,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 8867,
+      "actual": 8333,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 8369,
+      "actual": 8873,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 8138,
+      "actual": 8414,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 8018,
+      "actual": 8688,
+      "ili": 2.7
+    }
+  ],
+  "MED007": [
+    {
+      "week": "May 25",
+      "demand": 33440,
+      "actual": 38536,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 33737,
+      "actual": 34004,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 32616,
+      "actual": 32902,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 32536,
+      "actual": 33412,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 31907,
+      "actual": 33537,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 31983,
+      "actual": 33489,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 32087,
+      "actual": 30907,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 31291,
+      "actual": 30961,
+      "ili": 2.7
+    }
+  ],
+  "MED008": [
+    {
+      "week": "May 25",
+      "demand": 28830,
+      "actual": 31758,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 29015,
+      "actual": 29427,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 28549,
+      "actual": 29962,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 28496,
+      "actual": 28032,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 27777,
+      "actual": 29963,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 27622,
+      "actual": 29757,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 27385,
+      "actual": 28726,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 27789,
+      "actual": 27565,
+      "ili": 2.7
+    }
+  ],
+  "MED009": [
+    {
+      "week": "May 25",
+      "demand": 17509,
+      "actual": 17610,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 17283,
+      "actual": 18370,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 17291,
+      "actual": 17037,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 17188,
+      "actual": 18331,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 16943,
+      "actual": 18428,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 16808,
+      "actual": 17522,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 16741,
+      "actual": 16315,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 16133,
+      "actual": 16719,
+      "ili": 2.7
+    }
+  ],
+  "MED010": [
+    {
+      "week": "May 25",
+      "demand": 23314,
+      "actual": 24790,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 22903,
+      "actual": 21704,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 22189,
+      "actual": 23761,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 22441,
+      "actual": 22762,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 22284,
+      "actual": 23374,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 21950,
+      "actual": 24624,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 22127,
+      "actual": 21565,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 21369,
+      "actual": 22614,
+      "ili": 2.7
+    }
+  ],
+  "MED011": [
+    {
+      "week": "May 25",
+      "demand": 21091,
+      "actual": 22612,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 21333,
+      "actual": 22414,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 21210,
+      "actual": 21558,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 21174,
+      "actual": 22290,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 20549,
+      "actual": 21811,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 20634,
+      "actual": 22258,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 20520,
+      "actual": 20566,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 20407,
+      "actual": 20087,
+      "ili": 2.7
+    }
+  ],
+  "MED012": [
+    {
+      "week": "May 25",
+      "demand": 25171,
+      "actual": 25699,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 01",
+      "demand": 24873,
+      "actual": 27519,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 08",
+      "demand": 24574,
+      "actual": 26463,
+      "ili": 3.2
+    },
+    {
+      "week": "Jun 15",
+      "demand": 24825,
+      "actual": 24618,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 22",
+      "demand": 24184,
+      "actual": 23684,
+      "ili": 2.9
+    },
+    {
+      "week": "Jun 29",
+      "demand": 23564,
+      "actual": 25964,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 06",
+      "demand": 23738,
+      "actual": 25667,
+      "ili": 3.1
+    },
+    {
+      "week": "Jul 13",
+      "demand": 23510,
+      "actual": 22874,
+      "ili": 2.7
+    }
+  ]
+}

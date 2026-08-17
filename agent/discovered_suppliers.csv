@@ -1,0 +1,6 @@
+supplier_id,supplier_name,sku_id,unit_price,shipping_cost_per_order,lead_time_days,moq,max_capacity_units_per_week,otd_rate,quality_score,esg_score,carbon_rating,contract_min_units,contract_max_units,historical_avg_delay_days,delay_std_days,is_web_discovered,source_url
+SUP_WEB_01,Cipla Industrial Pharma Direct,MED001,5.79,1200.0,3,500,25000,0.986,0.992,90,Low Carbon Transport,500,25000,0.0,0.5,True,https://www.cipla.com/b2b-sourcing
+SUP_WEB_02,Sun Pharma B2B Sourcing,MED001,8.16,1200.0,2,1000,30000,0.985,0.99,91,Low Carbon Transport,1000,30000,0.0,0.5,True,https://www.sunpharma.com/wholesale
+SUP_WEB_03,Torrent Pharma Commercial Direct,MED001,8.52,1200.0,4,500,20000,0.955,0.965,93,Standard Rail/Truck,500,20000,0.2,0.5,True,https://www.torrentpharma.com/industrial-b2b
+SUP_WEB_04,Cipla Industrial Pharma Direct,MED002,5.79,1200.0,3,500,20000,0.986,0.99,90,Low Carbon Transport,500,20000,0.0,0.5,True,https://www.cipla.com/b2b-sourcing
+SUP_WEB_05,Zydus Lifesciences B2B Supply,MED002,5.89,1200.0,4,500,18000,0.949,0.955,88,Standard Rail/Truck,500,18000,0.2,0.5,True,https://www.zyduslife.com/commercial-supply

@@ -1,0 +1,13 @@
+sku_id,medicine_name,category,unit,shelf_life_months,criticality,flu_related,base_weekly_demand,base_price
+MED001,Paracetamol 500mg,Analgesic/Antipyretic,Tablet,24,Medium,True,9000,8.5
+MED002,Cetirizine 10mg,Antihistamine,Tablet,24,Medium,True,4200,6.2
+MED003,Cough Syrup 100ml,Cough/Cold,Bottle,18,Medium,True,3100,65.0
+MED004,Decongestant Nasal,Cough/Cold,Bottle,18,Low,True,1800,45.0
+MED005,Azithromycin 500mg,Antibiotic,Tablet,24,High,True,2600,22.0
+MED006,Insulin Glargine,Diabetes,Vial,18,Critical,False,1400,320.0
+MED007,Metformin 500mg,Diabetes,Tablet,24,Critical,False,5200,3.2
+MED008,Amlodipine 5mg,Cardiac/BP,Tablet,24,Critical,False,4800,4.1
+MED009,Vitamin D3 60K,Supplement,Sachet,30,Low,False,2900,32.0
+MED010,ORS Sachet,Rehydration,Sachet,24,Medium,False,3500,12.0
+MED011,Pantoprazole 40mg,Antacid,Tablet,24,Medium,False,3800,5.5
+MED012,Ibuprofen 400mg,Analgesic/Antipyretic,Tablet,24,Medium,True,4600,4.8

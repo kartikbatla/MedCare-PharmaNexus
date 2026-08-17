@@ -1,0 +1,11 @@
+{
+  "horizon_weeks": 4,
+  "mae": 289.4,
+  "rmse": 431.6,
+  "mape_pct": 6.54,
+  "naive_baseline_mape_pct": 10.74,
+  "accuracy_vs_naive_improvement_pct": 4.2,
+  "n_train": 23160,
+  "n_test": 480,
+  "best_iteration": 173
+}

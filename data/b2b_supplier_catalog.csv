@@ -1,0 +1,26 @@
+supplier_id,supplier_name,sku_id,unit_price,lead_time_days,otd_rate,quality_score,moq,weekly_capacity,is_web_discovered,source_url
+SUP_WEB_01,Cipla Industrial Pharma Direct,MED001,5.79,3,0.986,0.992,500,25000,true,https://www.cipla.com/b2b-sourcing
+SUP_WEB_02,Sun Pharma B2B Sourcing,MED001,8.16,2,0.985,0.990,1000,30000,true,https://www.sunpharma.com/wholesale
+SUP_WEB_03,Torrent Pharma Commercial Direct,MED001,8.52,4,0.955,0.965,500,20000,true,https://www.torrentpharma.com/industrial-b2b
+SUP_WEB_04,Cipla Industrial Pharma Direct,MED002,5.79,3,0.986,0.990,500,20000,true,https://www.cipla.com/b2b-sourcing
+SUP_WEB_05,Zydus Lifesciences B2B Supply,MED002,5.89,4,0.949,0.955,500,18000,true,https://www.zyduslife.com/commercial-supply
+SUP_WEB_06,Cipla Industrial Pharma Direct,MED003,60.59,4,0.983,0.988,200,10000,true,https://www.cipla.com/b2b-sourcing
+SUP_WEB_07,Zydus Lifesciences B2B Supply,MED003,57.37,5,0.940,0.950,200,8000,true,https://www.zyduslife.com/commercial-supply
+SUP_WEB_08,Mankind Pharma Direct B2B,MED004,41.20,3,0.975,0.980,300,15000,true,https://www.mankindpharma.com/b2b
+SUP_WEB_09,Dr Reddys Commercial Supplies,MED004,43.50,2,0.988,0.995,300,18000,true,https://www.drreddys.com/commercial
+SUP_WEB_10,Zydus Lifesciences B2B Supply,MED005,20.55,3,0.955,0.960,400,12000,true,https://www.zyduslife.com/commercial-supply
+SUP_WEB_11,Sun Pharma B2B Sourcing,MED005,21.80,2,0.990,0.992,400,15000,true,https://www.sunpharma.com/wholesale
+SUP_WEB_12,Sun Pharma B2B Sourcing,MED006,306.12,2,0.995,0.998,100,5000,true,https://www.sunpharma.com/wholesale
+SUP_WEB_13,Torrent Pharma Commercial Direct,MED006,314.30,4,0.992,0.990,100,4000,true,https://www.torrentpharma.com/industrial-b2b
+SUP_WEB_14,Alkem Industrial B2B,MED007,2.95,3,0.970,0.980,1000,40000,true,https://www.alkemlabs.com/b2b
+SUP_WEB_15,Lupin B2B Commercial,MED007,3.10,2,0.982,0.985,1000,50000,true,https://www.lupin.com/commercial
+SUP_WEB_16,Lupin B2B Commercial,MED008,3.85,3,0.980,0.988,500,25000,true,https://www.lupin.com/commercial
+SUP_WEB_17,Mankind Pharma Direct B2B,MED008,3.92,2,0.975,0.982,500,30000,true,https://www.mankindpharma.com/b2b
+SUP_WEB_18,Alkem Industrial B2B,MED009,8.40,4,0.965,0.975,400,20000,true,https://www.alkemlabs.com/b2b
+SUP_WEB_19,Dr Reddys Commercial Supplies,MED009,8.10,3,0.985,0.990,400,22000,true,https://www.drreddys.com/commercial
+SUP_WEB_20,Torrent Pharma Commercial Direct,MED010,12.50,3,0.975,0.980,300,18000,true,https://www.torrentpharma.com/industrial-b2b
+SUP_WEB_21,Cipla Industrial Pharma Direct,MED010,11.90,2,0.988,0.992,300,20000,true,https://www.cipla.com/b2b-sourcing
+SUP_WEB_22,Mankind Pharma Direct B2B,MED011,18.40,3,0.972,0.978,400,22000,true,https://www.mankindpharma.com/b2b
+SUP_WEB_23,Sun Pharma B2B Sourcing,MED011,19.10,2,0.989,0.993,400,25000,true,https://www.sunpharma.com/wholesale
+SUP_WEB_24,Dr Reddys Commercial Supplies,MED012,14.80,3,0.982,0.988,500,30000,true,https://www.drreddys.com/commercial
+SUP_WEB_25,Zydus Lifesciences B2B Supply,MED012,14.20,4,0.960,0.970,500,25000,true,https://www.zyduslife.com/commercial-supply

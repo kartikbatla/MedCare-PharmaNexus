@@ -1,0 +1,5 @@
+sku_id,medicine_name,plant_id,region,criticality,priority,forecast_qty_4wk,available_stock,safety_stock,required_qty,market_need_score,demand_momentum_score,stock_cover_days,days_to_expiry,reason
+MED001,Paracetamol 500mg,PLANT_BLR,South,Medium,Critical,10033.2582796188,7147,10660,13546.0,75.8,56.7,14.827087657276184,407,Stock covers only 14.8 days vs 28-day forecast of 10033 units; flu-driven demand signal +10%
+MED002,Cetirizine 10mg,PLANT_MUM,West,Medium,Critical,5120.623114644838,3400,5437,7158.0,75.2,57.0,17.53614706444338,75,Stock covers only 17.5 days vs 28-day forecast of 5121 units
+MED001,Paracetamol 500mg,PLANT_MUM,West,Medium,High,11081.610541481094,6646,11774,16210.0,73.6,50.3,13.148991245863176,18,Stock covers only 13.1 days vs 28-day forecast of 11082 units; near-expiry stock (18 days)
+MED002,Cetirizine 10mg,PLANT_DEL,North,Medium,High,5231.346985656724,8000,5487,2718.0,63.0,44.6,41.67874939242413,328,Stock covers only 41.7 days vs 28-day forecast of 5231 units

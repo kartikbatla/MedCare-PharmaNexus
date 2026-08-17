@@ -1,0 +1,7 @@
+po_id,invoice_number,sku_id,plant_id,po_qty,received_qty,invoice_qty,po_price,invoice_price,three_way_match,anomaly_types,payment_status
+PO-1000,INV-_02-2600,MED001,PLANT_BLR,13546.0,13546.0,13546.0,8.16,8.16,MATCH,-,Auto-Approved
+PO-1001,INV-_04-2601,MED002,PLANT_MUM,5380.0,5199.0,5606.0,5.79,5.79,MISMATCH,QTY_MISMATCH,Pending Review (invoice exception)
+PO-1002,INV-KOL-2602,MED002,PLANT_MUM,1778.0,1778.0,1778.0,1.1,1.1,MATCH,-,Auto-Approved
+PO-1003,INV-_01-2603,MED001,PLANT_MUM,16210.0,16210.0,16210.0,5.79,5.79,MATCH,-,Auto-Approved
+PO-1004,INV-_04-2604,MED002,PLANT_DEL,940.0,896.0,896.0,5.79,5.79,MATCH,-,Auto-Approved
+PO-1005,INV-KOL-2605,MED002,PLANT_DEL,1778.0,1778.0,1778.0,1.1,1.1,MATCH,-,Auto-Approved

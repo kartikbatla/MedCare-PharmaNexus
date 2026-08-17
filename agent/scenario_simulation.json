@@ -1,0 +1,19 @@
+{
+  "supplier_outage": {
+    "scenario_name": "Supplier Outage Disruption",
+    "description": "Simulates 100% capacity loss for Apex Pharma Supplies",
+    "disrupted_supplier": "Apex Pharma Supplies",
+    "baseline_landed_cost": 250499.0,
+    "simulated_landed_cost": 323963.0,
+    "cost_increase_inr": 73464.0,
+    "reallocated_units": 39632,
+    "summary": "Fulfillment rerouted to secondary suppliers; landed cost increases by INR 73,464 (+29.3%)."
+  },
+  "flu_surge": {
+    "scenario_name": "Flu Outbreak Surge (+50% ILI)",
+    "description": "Simulates a 50% spike in Influenza-Like Illness surveillance rates",
+    "additional_demand_units": 58927,
+    "critical_skus_affected": 11,
+    "summary": "Surge triggers an immediate additional demand requirement of +58,927 units across 11 flu-sensitive SKUs."
+  }
+}

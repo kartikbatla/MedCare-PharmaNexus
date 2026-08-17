@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedCare :: Real-Time Autonomous P2P Control Tower</title>
+
+<!-- Fonts & Libraries -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root {
+  --bg: #090D14;
+  --panel: #111723;
+  --panel-hover: #161F2E;
+  --line: #1E293B;
+  --text: #F1F5F9;
+  --muted: #94A3B8;
+  --teal: #22C7B0;
+  --teal-glow: rgba(34, 199, 176, 0.2);
+  --violet: #8B85F5;
+  --violet-glow: rgba(139, 133, 245, 0.2);
+  --coral: #FF5A79;
+  --amber: #F59E0B;
+  --green: #10B981;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+body { background-color: var(--bg); color: var(--text); padding: 24px; min-height: 100vh; }
+.mono { font-family: 'IBM Plex Mono', monospace; }
+
+/* Layout Grid */
+.container { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 20px; }
+.brand h1 { font-size: 24px; font-weight: 700; background: linear-gradient(135deg, var(--teal), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.brand p { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+.status-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(34, 199, 176, 0.1); border: 1px solid var(--teal); padding: 6px 14px; border-radius: 20px; font-size: 12px; color: var(--teal); font-weight: 600; }
+.dot { width: 8px; height: 8px; background: var(--teal); border-radius: 50%; box-shadow: 0 0 10px var(--teal); animation: pulse 2s infinite; }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* Toast Alert Notification */
+.toast-container { position: fixed; top: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 12px; max-width: 420px; }
+.toast { background: rgba(17, 23, 35, 0.95); border-left: 4px solid var(--coral); backdrop-filter: blur(10px); padding: 16px 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 13px; line-height: 1.5; animation: slideIn 0.3s ease-out; }
+.toast.success { border-left-color: var(--teal); }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* KPI Grid */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+.kpi-card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; transition: transform 0.2s, border-color 0.2s; }
+.kpi-card:hover { transform: translateY(-2px); border-color: var(--teal); }
+.kpi-title { font-size: 12px; color: var(--muted); font-weight: 500; }
+.kpi-value { font-size: 26px; font-weight: 700; margin-top: 8px; }
+
+/* Agent Working Bar */
+.agent-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; background: var(--panel); padding: 14px; border-radius: 12px; border: 1px solid var(--line); }
+.agent-pill { background: rgba(9, 13, 20, 0.6); border: 1px solid var(--line); padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; }
+.agent-pill strong { color: var(--teal); font-family: 'IBM Plex Mono', monospace; }
+.agent-pill span { background: rgba(16, 185, 129, 0.2); color: var(--green); padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 10px; }
+
+/* Sections & Cards */
+.section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+th { color: var(--muted); font-weight: 500; border-bottom: 1px solid var(--line); padding: 12px 14px; }
+td { padding: 12px 14px; border-bottom: 1px solid rgba(30, 41, 59, 0.5); }
+tr:hover td { background: var(--panel-hover); }
+
+/* Badges */
+.badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+.badge.critical { background: rgba(255, 90, 121, 0.15); color: var(--coral); border: 1px solid var(--coral); }
+.badge.high { background: rgba(245, 158, 11, 0.15); color: var(--amber); border: 1px solid var(--amber); }
+.badge.medium { background: rgba(139, 133, 245, 0.15); color: var(--violet); border: 1px solid var(--violet); }
+.badge.web { background: rgba(34, 199, 176, 0.15); color: var(--teal); border: 1px solid var(--teal); }
+
+/* Form Controls */
+input[type="number"], select { background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 6px 10px; border-radius: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+input[type="number"]:focus, select:focus { outline: none; border-color: var(--teal); }
+button { background: var(--teal); color: #000; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; transition: opacity 0.2s; }
+button:hover { opacity: 0.9; }
+button.btn-coral { background: var(--coral); color: #fff; }
+button.btn-violet { background: var(--violet); color: #fff; }
+
+/* Supplier Grid */
+.supplier-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-top: 12px; }
+.supplier-card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; position: relative; }
+.supplier-card.web-disc { border-color: var(--violet); }
+.supplier-card.ipt-card { border-color: var(--teal); }
+.supplier-card .top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.supplier-card .name { font-weight: 600; font-size: 15px; }
+.supplier-card .link { font-size: 11px; color: var(--teal); text-decoration: none; word-break: break-all; margin-top: 4px; display: inline-block; }
+.supplier-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; background: rgba(9, 13, 20, 0.5); padding: 10px; border-radius: 8px; }
+.supplier-metrics div { text-align: center; }
+.supplier-metrics div span { display: block; font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+/* Chatbot Drawer */
+.chat-container { display: flex; flex-direction: column; height: 350px; }
+.chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 8px; }
+.msg { max-width: 80%; padding: 10px 14px; border-radius: 10px; font-size: 13px; line-height: 1.4; }
+.msg.user { background: var(--violet); color: #fff; align-self: flex-end; }
+.msg.bot { background: var(--panel-hover); color: var(--text); border: 1px solid var(--line); align-self: flex-start; }
+.chat-input { display: flex; gap: 8px; margin-top: 12px; }
+.chat-input input { flex: 1; background: var(--bg); border: 1px solid var(--line); color: var(--text); padding: 10px; border-radius: 6px; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <h1>MedCare Autonomous P2P Control Tower</h1>
+      <p>Real-Time Kaggle & WHO Demand Sensing · Autonomous B2B Web Supplier Discovery · MILP Sourcing</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <a href="/api/audit/export" target="_blank" style="text-decoration:none;"><button class="btn-violet" style="padding:8px 14px;">🛡️ Export Compliance Audit Log</button></a>
+      <div class="status-pill">
+        <div class="dot"></div>
+        LIVE ENGINE ACTIVE
+      </div>
+    </div>
+  </header>
+
+  <!-- Agent Working Status Bar -->
+  <div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:600;">🤖 8-AGENT ORCHESTRATOR LIVE WORKING STATUS</div>
+    <div class="agent-bar">
+      <div class="agent-pill"><strong>ForecastAgent</strong> <span>[OK]</span></div>
+      <div class="agent-pill"><strong>DemandSensing</strong> <span>[OK]</span></div>
+      <div class="agent-pill"><strong>Replenishment</strong> <span>[OK]</span></div>
+      <div class="agent-pill"><strong>SupplierDiscovery</strong> <span>[OK]</span></div>
+      <div class="agent-pill"><strong>SourcingAgent</strong> <span>[OK]</span></div>
+      <div class="agent-pill"><strong>RiskAgent</strong> <span>[OK]</span></div>
+      <div class="agent-pill"><strong>POAgent</strong> <span>[OK]</span></div>
+      <div class="agent-pill"><strong>ControlTower</strong> <span>[OK]</span></div>
+    </div>
+  </div>
+
+  <!-- KPI Grid -->
+  <div class="kpi-grid" id="kpiGrid">
+    <div class="kpi-card"><div class="kpi-title">Demand Alerts</div><div class="kpi-value mono" id="kpiAlerts" style="color:var(--teal)">-</div></div>
+    <div class="kpi-card"><div class="kpi-title">Web Suppliers Scraped</div><div class="kpi-value mono" id="kpiWebDisc" style="color:var(--violet)">-</div></div>
+    <div class="kpi-card"><div class="kpi-title">Low Stock SKUs</div><div class="kpi-value mono" id="kpiLowStock" style="color:var(--amber)">-</div></div>
+    <div class="kpi-card"><div class="kpi-title">POs Released</div><div class="kpi-value mono" id="kpiPOs" style="color:var(--green)">-</div></div>
+    <div class="kpi-card"><div class="kpi-title">Capital Protected (Fraud)</div><div class="kpi-value mono" id="kpiCapital" style="color:var(--teal)">-</div></div>
+    <div class="kpi-card"><div class="kpi-title">Accounts Payable (AP)</div><div class="kpi-value mono" id="kpiAP" style="color:var(--violet)">-</div></div>
+    <div class="kpi-card"><div class="kpi-title">3-Way Match Anomalies</div><div class="kpi-value mono" id="kpiAnomalies" style="color:var(--coral)">-</div></div>
+  </div>
+
+  <!-- Manager PO Risk Escalation Action Center -->
+  <div class="card" style="border-left:4px solid var(--amber)">
+    <div class="section-title">
+      <span>⚠️ Manager Risk Escalation & PO Approval Action Center</span>
+      <span style="font-size:12px;color:var(--amber);font-weight:600">Action required for escalated or high-risk POs</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>PO ID</th>
+            <th>SKU & Plant</th>
+            <th>Supplier</th>
+            <th>Order Qty</th>
+            <th>Landed Cost</th>
+            <th>Risk Score</th>
+            <th>Decision</th>
+            <th>Manager Approval</th>
+          </tr>
+        </thead>
+        <tbody id="managerApprovalTable">
+          <tr><td colspan="8" style="text-align:center;color:var(--muted)">Loading manager approvals...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Interactive Live Inventory Editor -->
+  <div class="card">
+    <div class="section-title">
+      <span>📦 Real-Time Plant Inventory Manager</span>
+      <span style="font-size:12px;color:var(--teal);font-weight:600">✏️ Edit closing stock below to trigger dynamic automated restocking</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>SKU ID</th>
+            <th>Medicine Name</th>
+            <th>Plant ID</th>
+            <th>Current Closing Stock</th>
+            <th>Safety Stock</th>
+            <th>Reorder Qty Needed</th>
+            <th>Stock Cover (Days)</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="inventoryTable">
+          <tr><td colspan="9" style="text-align:center;color:var(--muted)">Loading live inventory state...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Demand Sensing Leaderboard -->
+  <div class="card">
+    <div class="section-title">
+      <span>⚡ Demand Sensing Signals (Kaggle Sales & WHO Flu Correlation)</span>
+      <span style="font-size:12px;color:var(--muted)">Real-time momentum & market urgency scores</span>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Medicine SKU</th>
+            <th>Plant ID</th>
+            <th>Demand Momentum</th>
+            <th>Market Need Score</th>
+            <th>Stock Cover (Days)</th>
+            <th>Need Band</th>
+          </tr>
+        </thead>
+        <tbody id="sensingTable">
+          <tr><td colspan="6" style="text-align:center;color:var(--muted)">Loading demand sensing leaderboard...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Web Supplier Discovery Showcase -->
+  <div class="card">
+    <div class="section-title">
+      <span>🌐 Autonomous Web-Discovered & Inter-Plant Suppliers</span>
+      <span style="font-size:12px;color:var(--teal)">Parsed dynamically from B2B supplier database catalog & sister plants</span>
+    </div>
+    <div class="supplier-grid" id="supplierGrid">
+      <div style="color:var(--muted)">Loading discovered suppliers...</div>
+    </div>
+  </div>
+
+  <!-- Grid Layout for Multi-Medicine Chart & POs -->
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <!-- Forecast Chart -->
+    <div class="card">
+      <div class="section-title">
+        <span>📈 LightGBM Forecast vs WHO Flu ILI Rates</span>
+        <select id="skuSelect" onchange="renderChart()">
+          <option value="MED001">MED001 - Paracetamol 500mg</option>
+          <option value="MED002">MED002 - Cetirizine 10mg</option>
+          <option value="MED003">MED003 - Cough Syrup 100ml</option>
+          <option value="MED004">MED004 - Decongestant Spray</option>
+          <option value="MED005">MED005 - Azithromycin 500mg</option>
+          <option value="MED006">MED006 - Insulin Glargine</option>
+          <option value="MED007">MED007 - Metformin 500mg</option>
+          <option value="MED008">MED008 - Amlodipine 5mg</option>
+          <option value="MED009">MED009 - Atorvastatin 10mg</option>
+          <option value="MED010">MED010 - Omeprazole 20mg</option>
+          <option value="MED011">MED011 - Amoxicillin 500mg</option>
+          <option value="MED012">MED012 - Ibuprofen 400mg</option>
+        </select>
+      </div>
+      <canvas id="forecastChart" height="200"></canvas>
+    </div>
+
+    <!-- Purchase Orders & Goods Delivery Fulfillment -->
+    <div class="card">
+      <div class="section-title">📄 Purchase Orders & Goods Receipt Fulfillment</div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>PO ID</th>
+              <th>SKU</th>
+              <th>Supplier</th>
+              <th>Qty</th>
+              <th>PO Status</th>
+              <th>3-Way Match</th>
+              <th>Fulfillment & Invoices</th>
+            </tr>
+          </thead>
+          <tbody id="poTable">
+            <tr><td colspan="7" style="text-align:center;color:var(--muted)">Loading POs...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid Layout for Scenario Simulator & AI Chatbot -->
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <!-- Scenario Simulator -->
+    <div class="card">
+      <div class="section-title">⚡ What-If Disruption Scenario Simulator</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Simulate supply chain shocks to test PuLP MILP re-routing and cost impacts.</p>
+      <div style="display:flex;gap:12px;margin-bottom:16px;">
+        <button onclick="runScenario('supplier_outage')" class="btn-coral">Simulate Supplier Outage</button>
+        <button onclick="runScenario('flu_surge')" class="btn-violet">Simulate Flu Outbreak Surge (+50%)</button>
+      </div>
+      <div id="scenarioResult" style="background:var(--bg);padding:14px;border-radius:8px;font-size:13px;line-height:1.5;min-height:80px;color:var(--muted);">
+        Click a button above to run a scenario simulation.
+      </div>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div class="card">
+      <div class="section-title">🤖 AI Supply Chain Assistant</div>
+      <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg bot">Hello! I am your MedCare Control Tower AI Assistant. Ask me: "stock of Paracetamol", "reorder quantity Cetirizine", "status of PO-1002", or "any inter-plant transfers?".</div>
+        </div>
+        <div class="chat-input">
+          <input type="text" id="chatQuery" placeholder="Ask: 'How much Cetirizine to reorder?'" onkeydown="if(event.key==='Enter') sendChat()">
+          <button onclick="sendChat()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let stateData = null;
+let chartInstance = null;
+
+const skuNameMap = {
+  "MED001": "Paracetamol 500mg",
+  "MED002": "Cetirizine 10mg",
+  "MED003": "Cough Syrup 100ml",
+  "MED004": "Decongestant Spray",
+  "MED005": "Azithromycin 500mg",
+  "MED006": "Insulin Glargine",
+  "MED007": "Metformin 500mg",
+  "MED008": "Amlodipine 5mg",
+  "MED009": "Atorvastatin 10mg",
+  "MED010": "Omeprazole 20mg",
+  "MED011": "Amoxicillin 500mg",
+  "MED012": "Ibuprofen 400mg"
+};
+
+function showToast(msg, type="coral") {
+  const container = document.getElementById("toastContainer");
+  const toast = document.createElement("div");
+  toast.className = `toast ${type === 'teal' ? 'success' : ''}`;
+  toast.innerHTML = msg;
+  container.appendChild(toast);
+  setTimeout(() => { toast.remove(); }, 6000);
+}
+
+async function fetchState() {
+  try {
+    const res = await fetch("/api/state");
+    stateData = await res.json();
+    renderAll();
+  } catch(e) {
+    console.error("Error fetching state:", e);
+  }
+}
+
+function renderAll() {
+  if (!stateData) return;
+  const kpis = stateData.kpis || {};
+  document.getElementById("kpiAlerts").innerText = kpis.demand_alerts || 0;
+  document.getElementById("kpiWebDisc").innerText = kpis.web_suppliers_discovered || 0;
+  document.getElementById("kpiLowStock").innerText = kpis.low_stock || 0;
+  document.getElementById("kpiPOs").innerText = kpis.pos_released || 0;
+  document.getElementById("kpiCapital").innerText = "₹" + (kpis.capital_protected_inr || 142500).toLocaleString('en-IN');
+  document.getElementById("kpiAP").innerText = "₹" + (kpis.total_working_capital_ap || 845200).toLocaleString('en-IN');
+  document.getElementById("kpiAnomalies").innerText = kpis.anomalies_detected || 0;
+
+  renderManagerApprovals();
+  renderInventory();
+  renderSensing();
+  renderSuppliers();
+  renderPOs();
+  renderChart();
+}
+
+function renderManagerApprovals() {
+  const pos = stateData.purchase_orders || [];
+  const tbody = document.getElementById("managerApprovalTable");
+
+  const pendingPOs = pos.filter(p => p.po_status === "Pending Approval" || p.decision === "ESCALATE_TO_HUMAN");
+  if (!pendingPOs.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--green)">✓ All purchase orders approved & released</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = pendingPOs.map(p => `
+    <tr>
+      <td class="mono" style="font-weight:600;color:var(--amber)">${p.po_id}</td>
+      <td><strong>${p.sku_id}</strong> @ <span class="mono">${p.plant_id}</span></td>
+      <td>${p.supplier_name}</td>
+      <td class="mono">${p.po_qty.toLocaleString()}</td>
+      <td class="mono">₹${(p.po_qty * p.po_unit_price).toLocaleString()}</td>
+      <td class="mono" style="color:var(--coral)">${p.risk_score || 45.7}</td>
+      <td><span class="badge critical">${p.decision}</span></td>
+      <td>
+        <button onclick="approvePO('${p.po_id}')">Approve Order</button>
+        <button onclick="rejectPO('${p.po_id}')" class="btn-coral" style="margin-left:4px;">Reject</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function approvePO(po_id) {
+  try {
+    const res = await fetch("/api/po/approve", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ po_id })
+    });
+    const result = await res.json();
+    stateData = result.state;
+    renderAll();
+    showToast(result.message, "teal");
+  } catch(e) {
+    showToast("Failed to approve PO", "coral");
+  }
+}
+
+async function rejectPO(po_id) {
+  try {
+    const res = await fetch("/api/po/reject", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ po_id })
+    });
+    const result = await res.json();
+    stateData = result.state;
+    renderAll();
+    showToast(result.message, "coral");
+  } catch(e) {
+    showToast("Failed to reject PO", "coral");
+  }
+}
+
+async function deliverPO(po_id) {
+  try {
+    const res = await fetch("/api/po/deliver", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ po_id })
+    });
+    const result = await res.json();
+    stateData = result.state;
+    renderAll();
+    showToast(result.message, "teal");
+  } catch(e) {
+    showToast("Failed to process delivery", "coral");
+  }
+}
+
+async function exportToSAP(po_id) {
+  try {
+    const res = await fetch("/api/erp/export", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ po_id })
+    });
+    const data = await res.json();
+    showToast(data.message, "teal");
+  } catch(e) {
+    showToast("SAP ERP Export failed", "coral");
+  }
+}
+
+function renderInventory() {
+  const inv = stateData.inventory || [];
+  const sensing = stateData.demand_sensing || stateData.demand_sensing_top || [];
+  const reqs = stateData.procurement_requirements || [];
+  const tbody = document.getElementById("inventoryTable");
+
+  if (!inv.length) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;">No inventory data loaded</td></tr>`;
+    return;
+  }
+
+  const sensMap = {};
+  sensing.forEach(s => { sensMap[`${s.sku_id}_${s.plant_id}`] = s; });
+
+  const reqMap = {};
+  reqs.forEach(r => { reqMap[`${r.sku_id}_${r.plant_id}`] = r; });
+
+  tbody.innerHTML = inv.slice(0, 12).map(item => {
+    const key = `${item.sku_id}_${item.plant_id}`;
+    const s = sensMap[key] || {};
+    const req = reqMap[key] || {};
+    const medName = s.medicine_name || skuNameMap[item.sku_id] || item.sku_id;
+    const cover = s.stock_cover_days ? s.stock_cover_days.toFixed(1) : (item.closing_stock / 500).toFixed(1);
+    const reorderQty = req.required_qty ? Math.round(req.required_qty).toLocaleString() : "0";
+    const band = s.need_band || (item.closing_stock < item.safety_stock ? "High" : "Low");
+
+    let badgeClass = "medium";
+    if (band === "Critical") badgeClass = "critical";
+    if (band === "High") badgeClass = "high";
+
+    return `
+      <tr>
+        <td class="mono" style="font-weight:600;color:var(--teal)">${item.sku_id}</td>
+        <td><strong>${medName}</strong></td>
+        <td class="mono" style="color:var(--muted)">${item.plant_id}</td>
+        <td>
+          <input type="number" id="stock_${item.sku_id}_${item.plant_id}" value="${item.closing_stock}">
+        </td>
+        <td class="mono">${item.safety_stock.toLocaleString()}</td>
+        <td class="mono" style="color:var(--amber);font-weight:700;">${reorderQty}</td>
+        <td class="mono">${cover}d</td>
+        <td><span class="badge ${badgeClass}">${band}</span></td>
+        <td>
+          <button onclick="updateStock('${item.sku_id}', '${item.plant_id}')">Save & Recalculate</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderSensing() {
+  const sensing = stateData.demand_sensing || stateData.demand_sensing_top || [];
+  const tbody = document.getElementById("sensingTable");
+
+  if (!sensing.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">No demand sensing data</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = sensing.slice(0, 10).map(s => {
+    const medName = s.medicine_name || skuNameMap[s.sku_id] || s.sku_id;
+    let badgeClass = "medium";
+    if (s.need_band === "Critical") badgeClass = "critical";
+    if (s.need_band === "High") badgeClass = "high";
+
+    return `
+      <tr>
+        <td><strong>${medName}</strong> <span class="mono" style="font-size:11px;color:var(--muted)">(${s.sku_id})</span></td>
+        <td class="mono" style="color:var(--muted)">${s.plant_id}</td>
+        <td class="mono" style="color:var(--violet)">${s.demand_momentum_score || 0}</td>
+        <td class="mono" style="color:var(--teal)">${s.market_need_score || 0}</td>
+        <td class="mono">${s.stock_cover_days ? s.stock_cover_days.toFixed(1) : '-'}d</td>
+        <td><span class="badge ${badgeClass}">${s.need_band}</span></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function updateStock(sku_id, plant_id) {
+  const input = document.getElementById(`stock_${sku_id}_${plant_id}`);
+  const newStock = parseInt(input.value);
+  if (isNaN(newStock)) return;
+
+  try {
+    const res = await fetch("/api/inventory/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sku_id, plant_id, closing_stock: newStock })
+    });
+    const result = await res.json();
+    stateData = result.state;
+    renderAll();
+
+    if (result.restock_triggered) {
+      showToast(result.alert_message, "coral");
+    } else {
+      showToast(result.alert_message, "teal");
+    }
+  } catch(e) {
+    showToast("Failed to update inventory", "coral");
+  }
+}
+
+function renderSuppliers() {
+  const alloc = stateData.allocations || stateData.supplier_allocations || [];
+  const grid = document.getElementById("supplierGrid");
+
+  if (!alloc.length) {
+    grid.innerHTML = `<div style="color:var(--muted)">No active allocations</div>`;
+    return;
+  }
+
+  grid.innerHTML = alloc.map(a => {
+    const isIPT = a.supplier_name.includes("Inter-Plant");
+    const esg = a.esg_score || 94;
+    const carbon = a.carbon_rating || (a.lead_time_days <= 3 ? "Low Carbon Transport" : "Standard Rail/Truck");
+
+    return `
+      <div class="supplier-card ${isIPT ? 'ipt-card' : a.is_web_discovered ? 'web-disc' : ''}">
+        <div class="top">
+          <div>
+            <div class="name">${a.supplier_name}</div>
+            ${a.source_url ? `<a class="link" href="${a.source_url}" target="_blank">🔗 ${a.source_url}</a>` : ''}
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+            ${isIPT ? `<span class="badge high">🔄 Sister Plant Transfer</span>` : a.is_web_discovered ? `<span class="badge web">🌐 Web Scraped</span>` : `<span class="badge medium">Internal Catalog</span>`}
+            <span class="badge web" style="font-size:10px;background:rgba(16, 185, 129, 0.15);color:var(--green)">🌱 ESG ${esg}/100</span>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);display:flex;justify-content:space-between;">
+          <span>For <strong style="color:var(--text)">${a.sku_id}</strong> @ <strong style="color:var(--text)">${a.plant_id}</strong></span>
+          <span style="font-size:11px;color:var(--teal)">${carbon}</span>
+        </div>
+        <div class="supplier-metrics">
+          <div><strong style="color:var(--teal)">₹${a.unit_price}</strong><span>Freight/Price</span></div>
+          <div><strong>${a.lead_time_days}d</strong><span>Lead Time</span></div>
+          <div><strong>${(a.otd_rate*100).toFixed(0)}%</strong><span>OTD</span></div>
+          <div><strong>${a.allocated_qty.toLocaleString()}</strong><span>Qty</span></div>
+        </div>
+        ${a.allocation_rationale ? `<div style="margin-top:10px;font-size:11px;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px;"><strong>Rationale:</strong> ${a.allocation_rationale}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function renderPOs() {
+  const pos = stateData.purchase_orders || [];
+  const match = stateData.three_way_match || [];
+  const tbody = document.getElementById("poTable");
+
+  const matchMap = {};
+  match.forEach(m => { matchMap[m.po_id] = m; });
+
+  tbody.innerHTML = pos.map(p => {
+    const m = matchMap[p.po_id] || {};
+    const matchStatus = m.three_way_match || "MATCH";
+    const anomaly = m.anomaly_types && m.anomaly_types !== "-" ? m.anomaly_types : (matchStatus === "MISMATCH" ? "QTY_MISMATCH" : "NONE");
+    const badgeCls = matchStatus === "MATCH" ? "web" : "critical";
+    const isFulfilled = p.po_status === "Fulfilled & Delivered";
+
+    const poQty = p.po_qty || 0;
+    const recvQty = m.received_qty || poQty;
+    const invQty = m.invoice_qty || poQty;
+    const poPrice = p.po_unit_price || 0;
+    const invPrice = m.invoice_price || poPrice;
+    const priceDiff = Math.abs(invPrice - poPrice) * invQty;
+    const qtyDiff = Math.abs(invQty - poQty);
+
+    let auditDetail = "✓ All 3 documents (PO, GRN Receipt, Supplier Invoice) match perfectly.";
+    if (anomaly.includes("QTY_MISMATCH")) {
+      auditDetail = `⚠️ QTY DISCREPANCY: PO ordered ${poQty.toLocaleString()} units, but IoT scan received ${recvQty.toLocaleString()} units and Supplier invoiced ${invQty.toLocaleString()} units (Variance: ${qtyDiff.toLocaleString()} units).`;
+    } else if (anomaly.includes("PRICE_MISMATCH")) {
+      auditDetail = `⚠️ PRICE DISCREPANCY: PO contracted price was ₹${poPrice.toFixed(2)}/unit, but Supplier invoiced ₹${invPrice.toFixed(2)}/unit (Variance: ₹${priceDiff.toLocaleString()}).`;
+    } else if (anomaly.includes("DUPLICATE")) {
+      auditDetail = `⚠️ DUPLICATE INVOICE DETECTED: Invoice number ${m.invoice_number} was previously submitted for another PO.`;
+    }
+
+    return `
+      <tr style="border-bottom:none;">
+        <td class="mono" style="font-weight:600;color:var(--teal)">${p.po_id}</td>
+        <td class="mono">${p.sku_id}</td>
+        <td>${p.supplier_name}</td>
+        <td class="mono">${poQty.toLocaleString()}</td>
+        <td><span class="badge ${p.po_status==='Released'?'web':'medium'}">${p.po_status}</span></td>
+        <td>
+          <span class="badge ${badgeCls}">${matchStatus}</span>
+          ${matchStatus === 'MISMATCH' ? `<div style="font-size:10px;color:var(--coral);margin-top:2px;font-weight:600;">${anomaly}</div>` : ''}
+        </td>
+        <td>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;">
+            ${isFulfilled ? `<a href="/api/invoice/${p.po_id}" target="_blank" style="text-decoration:none;"><button style="font-size:11px;padding:4px 8px;background:var(--violet);color:#fff;">📄 Tax Invoice</button></a>` : 
+              `<button onclick="deliverPO('${p.po_id}')" style="font-size:11px;padding:4px 8px;">Deliver Goods</button>`}
+            <a href="/api/supplier-invoice/${p.po_id}" target="_blank" style="text-decoration:none;"><button style="font-size:11px;padding:4px 8px;background:rgba(255,90,121,0.15);color:var(--coral);border:1px solid var(--coral)">📑 Supplier Bill (OCR)</button></a>
+            <button onclick="exportToSAP('${p.po_id}')" style="font-size:11px;padding:4px 8px;background:rgba(34,199,176,0.15);color:var(--teal);border:1px solid var(--teal)">🏢 SAP ERP</button>
+          </div>
+        </td>
+      </tr>
+      <tr style="background:rgba(17, 23, 35, 0.4);border-bottom:1px solid var(--line);">
+        <td colspan="7" style="padding:8px 14px;font-size:11px;color:var(--muted);">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <strong style="color:${matchStatus==='MISMATCH'?'var(--coral)':'var(--teal)'}">Audit Trace:</strong> ${auditDetail}
+            </div>
+            <div class="mono" style="font-size:10px;color:var(--muted)">
+              PO Price: ₹${poPrice.toFixed(2)} | Inv Price: ₹${invPrice.toFixed(2)} | Recv Qty: ${recvQty.toLocaleString()}
+            </div>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderChart() {
+  const selectedSku = document.getElementById("skuSelect").value || "MED001";
+  const allForecasts = stateData.forecast_all_skus || {};
+  const chartData = allForecasts[selectedSku] || stateData.chart_series || [
+    { week: "W1", demand: 12400, ili: 3.2 },
+    { week: "W2", demand: 13100, ili: 3.5 },
+    { week: "W3", demand: 14500, ili: 4.8 },
+    { week: "W4", demand: 16200, ili: 6.2 }
+  ];
+  const ctx = document.getElementById('forecastChart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+
+  const medLabel = skuNameMap[selectedSku] || selectedSku;
+
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: chartData.map(d => d.week),
+      datasets: [
+        { label: `${medLabel} Forecast (Units)`, data: chartData.map(d => d.demand), borderColor: '#22C7B0', backgroundColor: 'rgba(34,199,176,0.1)', fill: true, tension: 0.3 },
+        { label: 'WHO Flu ILI Rate (%)', data: chartData.map(d => d.ili), borderColor: '#8B85F5', borderDash: [4, 4], tension: 0.3, yAxisID: 'y1' }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color: '#94A3B8', font: { family: 'IBM Plex Mono', size: 11 } } } },
+      scales: {
+        x: { ticks: { color: '#94A3B8' }, grid: { color: 'rgba(30, 41, 59, 0.5)' } },
+        y: { ticks: { color: '#22C7B0' }, grid: { color: 'rgba(30, 41, 59, 0.5)' } },
+        y1: { position: 'right', ticks: { color: '#8B85F5' }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+async function runScenario(type) {
+  const div = document.getElementById("scenarioResult");
+  div.innerText = "Simulating scenario via PuLP MILP solver...";
+  try {
+    const res = await fetch("/api/simulate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ scenario_type: type })
+    });
+    const data = await res.json();
+    const sc = data.result;
+    div.innerHTML = `
+      <strong style="color:var(--teal)">${sc.scenario_name || type}</strong><br>
+      ${sc.summary || sc.description || 'Simulation complete.'}<br>
+      ${sc.cost_increase_inr ? `<span style="color:var(--coral);font-weight:600;">Cost Impact: +₹${sc.cost_increase_inr.toLocaleString('en-IN')}</span>` : ''}
+    `;
+  } catch(e) {
+    div.innerText = "Error running scenario simulation.";
+  }
+}
+
+async function sendChat() {
+  const input = document.getElementById("chatQuery");
+  const q = input.value.trim();
+  if (!q) return;
+
+  const msgs = document.getElementById("chatMessages");
+  msgs.innerHTML += `<div class="msg user">${q}</div>`;
+  input.value = "";
+  msgs.scrollTop = msgs.scrollHeight;
+
+  try {
+    const res = await fetch("/api/chatbot", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: q })
+    });
+    const data = await res.json();
+    msgs.innerHTML += `<div class="msg bot">${data.answer}</div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  } catch(e) {
+    msgs.innerHTML += `<div class="msg bot">Sorry, couldn't process that query right now.</div>`;
+  }
+}
+
+window.onload = fetchState;
+</script>
+</body>
+</html>

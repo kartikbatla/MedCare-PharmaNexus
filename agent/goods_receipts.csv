@@ -1,0 +1,7 @@
+po_id,sku_id,plant_id,received_qty,receipt_method,quality_check,short_shipped
+PO-1000,MED001,PLANT_BLR,13546.0,Simulated IoT/CV scan,Pass,False
+PO-1001,MED002,PLANT_MUM,5199.0,Simulated IoT/CV scan,Pass,True
+PO-1002,MED002,PLANT_MUM,1778.0,Simulated IoT/CV scan,Pass,False
+PO-1003,MED001,PLANT_MUM,16210.0,Simulated IoT/CV scan,Pass,False
+PO-1004,MED002,PLANT_DEL,896.0,Simulated IoT/CV scan,Pass,True
+PO-1005,MED002,PLANT_DEL,1778.0,Simulated IoT/CV scan,Pass,False

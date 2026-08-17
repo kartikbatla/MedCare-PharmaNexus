@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MedCare Control Tower</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0A121D;
+    --panel:#101B2B;
+    --panel-2:#0D1723;
+    --line: rgba(140,168,196,0.14);
+    --text:#E9EFF6;
+    --muted:#8CA0B8;
+    --teal:#22C7B0;
+    --teal-dim: rgba(34,199,176,0.14);
+    --amber:#F2A93B;
+    --amber-dim: rgba(242,169,59,0.14);
+    --coral:#EF6A5B;
+    --coral-dim: rgba(239,106,91,0.14);
+    --violet:#8B85F5;
+    --violet-dim: rgba(139,133,245,0.14);
+    --radius: 10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  .display{font-family:'Space Grotesk', sans-serif;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 22px 60px;}
+
+  /* ---------- header ---------- */
+  header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+    padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:22px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--teal),var(--violet));
+    display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:700;color:#04140F;font-size:15px;flex:none;}
+  .brand h1{font-family:'Space Grotesk';font-weight:600;font-size:19px;margin:0;letter-spacing:0.2px;}
+  .brand p{margin:2px 0 0;color:var(--muted);font-size:12.5px;}
+  .agent-status{display:flex;gap:6px;flex-wrap:wrap;}
+  .agent-pill{font-family:'IBM Plex Mono';font-size:10.5px;padding:5px 9px;border-radius:100px;
+    background:var(--panel);border:1px solid var(--line);color:var(--muted);display:flex;align-items:center;gap:5px;}
+  .agent-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal);}
+
+  /* ---------- KPI strip ---------- */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px;}
+  @media(max-width:820px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 14px;position:relative;overflow:hidden;}
+  .kpi::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--accent,var(--teal));}
+  .kpi .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
+  .kpi .val{font-family:'Space Grotesk';font-size:30px;font-weight:600;line-height:1;}
+  .kpi .sub{margin-top:6px;font-size:11.5px;color:var(--muted);}
+
+  /* ---------- section shells ---------- */
+  section{margin-bottom:30px;}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+  .sec-head h2{font-family:'Space Grotesk';font-size:15px;font-weight:600;margin:0;letter-spacing:0.2px;}
+  .sec-head .eyebrow{font-family:'IBM Plex Mono';font-size:10.5px;color:var(--violet);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:3px;}
+  .sec-note{font-size:12px;color:var(--muted);max-width:520px;text-align:right;}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;}
+
+  /* ---------- signature chart ---------- */
+  .signature{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;}
+  @media(max-width:900px){.signature{grid-template-columns:1fr;}}
+  .metric-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .mtile{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:12px;}
+  .mtile .n{font-family:'Space Grotesk';font-size:20px;font-weight:600;}
+  .mtile .l{font-size:10.5px;color:var(--muted);margin-top:3px;}
+  .mtile.good .n{color:var(--teal);}
+
+  /* ---------- tables ---------- */
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);
+    padding:0 10px 8px;font-weight:500;border-bottom:1px solid var(--line);}
+  td{padding:10px 10px;border-bottom:1px solid var(--line);vertical-align:middle;}
+  tr:last-child td{border-bottom:none;}
+  .num{font-family:'IBM Plex Mono';}
+  .bar-cell{display:flex;align-items:center;gap:8px;}
+  .bar-track{flex:1;height:6px;background:var(--panel-2);border-radius:100px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:100px;background:var(--accent,var(--teal));}
+
+  .badge{display:inline-block;font-family:'IBM Plex Mono';font-size:10.5px;padding:3px 8px;border-radius:5px;font-weight:500;}
+  .badge.critical{background:var(--coral-dim);color:var(--coral);}
+  .badge.high{background:var(--amber-dim);color:var(--amber);}
+  .badge.medium{background:var(--violet-dim);color:var(--violet);}
+  .badge.approve{background:var(--teal-dim);color:var(--teal);}
+  .badge.escalate{background:var(--coral-dim);color:var(--coral);}
+  .badge.match{background:var(--teal-dim);color:var(--teal);}
+  .badge.mismatch{background:var(--coral-dim);color:var(--coral);}
+  .badge.pending{background:var(--amber-dim);color:var(--amber);}
+
+  /* ---------- allocation cards ---------- */
+  .alloc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;}
+  .alloc-card{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:13px;}
+  .alloc-card .top{display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;}
+  .alloc-card .sku{font-family:'Space Grotesk';font-weight:600;font-size:13.5px;}
+  .alloc-card .supplier{font-size:11.5px;color:var(--muted);margin-top:2px;}
+  .alloc-card .metrics{display:flex;gap:12px;margin-top:10px;font-family:'IBM Plex Mono';font-size:11px;}
+  .alloc-card .metrics div span{display:block;color:var(--muted);font-size:9.5px;text-transform:uppercase;margin-top:1px;}
+
+  /* ---------- chatbot ---------- */
+  .chat-list{display:flex;flex-direction:column;gap:10px;}
+  .chat-item{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:12px 14px;}
+  .chat-q{font-size:12.5px;color:var(--violet);font-family:'IBM Plex Mono';margin-bottom:6px;}
+  .chat-q::before{content:"› ";}
+  .chat-a{font-size:13px;line-height:1.5;}
+  .chat-input-row{display:flex;gap:8px;margin-top:12px;}
+  .chat-input-row input{flex:1;background:var(--panel-2);border:1px solid var(--line);border-radius:7px;
+    color:var(--text);padding:9px 12px;font-size:13px;font-family:'Inter';}
+  .chat-input-row button{background:var(--teal);color:#04140F;border:none;border-radius:7px;padding:0 16px;
+    font-weight:600;font-size:13px;cursor:pointer;font-family:'Inter';}
+  .chat-input-row button:hover{opacity:0.88;}
+
+  footer{border-top:1px solid var(--line);margin-top:10px;padding-top:16px;font-size:11.5px;color:var(--muted);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  code{font-family:'IBM Plex Mono';background:var(--panel-2);padding:1px 5px;border-radius:4px;font-size:11.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark">MC</div>
+      <div>
+        <h1>MedCare Control Tower</h1>
+        <p>Demand Sensing (P1) → Autonomous Procure-to-Pay (PR2) · synthetic hackathon data</p>
+      </div>
+    </div>
+    <div class="agent-status" id="agentStatus"></div>
+  </header>
+
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <section>
+    <div class="sec-head">
+      <div><span class="eyebrow">Signature signal</span><h2>Flu activity → Paracetamol demand (Delhi, 24 months)</h2></div>
+      <div class="sec-note">This is the core P1 idea: current ILI surveillance is fed to the model as an exogenous signal, not just calendar month — so a fast-rising flu season shows up as a demand-sensing alert before it fully shows up in sales.</div>
+    </div>
+    <div class="signature">
+      <div class="panel"><canvas id="fluChart" height="230"></canvas></div>
+      <div class="panel" style="display:flex;flex-direction:column;gap:12px;">
+        <div class="metric-tiles" id="modelMetrics"></div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.55;margin-top:2px;">
+          LightGBM, 4-week-ahead horizon, trained on lags + rolling stats + ILI features + calendar/promo.
+          Accuracy is measured against a naive "same as last week" baseline on a held-out final 8 weeks (no leakage — pure time-based split).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div><span class="eyebrow">Demand sensing</span><h2>Momentum vs Market-Need leaderboard</h2></div>
+      <div class="sec-note">Momentum = "is this medicine trending up right now?" Need = momentum + stock cover + criticality. The two rank differently on purpose.</div>
+    </div>
+    <div class="panel">
+      <table>
+        <thead><tr><th>SKU</th><th>Plant</th><th>Momentum</th><th>Market need</th><th>Stock cover</th><th>Band</th></tr></thead>
+        <tbody id="sensingBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div><span class="eyebrow">Sourcing agent</span><h2>Optimized supplier allocation & explainability</h2></div>
+      <div class="sec-note">PuLP MILP per SKU × plant — minimizes landed price + risk penalty + lead-time penalty with explicit explainability rationale per allocation.</div>
+    </div>
+    <div class="alloc-grid" id="allocGrid"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div><span class="eyebrow">Scenario Simulator</span><h2>What-If Supply Chain Disruption Engine</h2></div>
+      <div class="sec-note">Simulate real-time supply chain shocks (supplier outages, disease surges) and view dynamic rerouting & cost impact.</div>
+    </div>
+    <div class="alloc-grid" id="scenarioGrid"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div><span class="eyebrow">Risk agent</span><h2>Confidence-gated PO release</h2></div>
+      <div class="sec-note">Auto-approve only when risk is low AND confidence in that risk estimate is high — low-confidence estimates escalate even if the point-estimate risk looks fine.</div>
+    </div>
+    <div class="panel">
+      <table>
+        <thead><tr><th>SKU / Plant</th><th>Supplier</th><th>Risk score</th><th>Confidence</th><th>Decision</th></tr></thead>
+        <tbody id="riskBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div><span class="eyebrow">PO agent</span><h2>Goods receipt → invoice OCR → 3-way match</h2></div>
+      <div class="sec-note">Simulated IoT/CV receipt + OCR invoice extraction, matched against PO within tolerance. Mismatches route to a human payment-review queue instead of auto-paying.</div>
+    </div>
+    <div class="panel">
+      <table>
+        <thead><tr><th>PO</th><th>SKU</th><th>PO qty</th><th>Received</th><th>Invoiced</th><th>Match</th><th>Payment</th></tr></thead>
+        <tbody id="matchBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div><span class="eyebrow">AI chatbot</span><h2>Ask the control tower</h2></div>
+      <div class="sec-note">Interactive control tower assistant answering status, reorder, sourcing rationale & what-if queries.</div>
+    </div>
+    <div class="panel">
+      <div class="chat-list" id="chatList"></div>
+      <div class="chat-input-row">
+        <input id="chatInput" type="text" placeholder="Try: status of PO-1002 / why Apex Pharma? / what if supplier outage? / any anomalies?" />
+        <button onclick="askBot()">Ask</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>MedCare Pharma · P1 (Demand Sensing & Replenishment) + PR2 (Autonomous P2P) · hackathon build</span>
+    <span>All data synthetic — calibrated to real-world ILI seasonality + pharma demand patterns, not sourced from a real company</span>
+  </footer>
+
+</div>
+
+<script>
+const KPI_DATA = __KPI_DATA__;
+const CHART_SERIES = __CHART_SERIES__;
+const SENSING = __SENSING_DATA__;
+const ALLOC = __ALLOC_DATA__;
+const RISK = __RISK_DATA__;
+const MATCH = __MATCH_DATA__;
+const METRICS = __METRICS_DATA__;
+const CHAT_DEMO = __CHAT_DATA__;
+const REQS = __REQS_DATA__;
+const SCENARIOS = __SCENARIOS_DATA__;
+
+// ---------- agent status pills ----------
+const agents = ["DataAgent","ForecastAgent","DemandSensingAgent","ReplenishmentAgent","SourcingAgent","RiskAgent","POAgent","ControlTowerAgent"];
+document.getElementById('agentStatus').innerHTML = agents.map(a => `<span class="agent-pill"><span class="dot"></span>${a}</span>`).join('');
+
+// ---------- KPI grid ----------
+const kpiMeta = [
+  ["demand_alerts","Demand alerts","teal"],
+  ["web_suppliers_discovered","Web Suppliers Discovered","violet"],
+  ["low_stock","Low stock SKUs","amber"],
+  ["near_expiry","Near-expiry SKUs","coral"],
+  ["pos_pending_approval","POs pending","amber"],
+  ["pos_released","POs released","teal"],
+  ["invoices_processing","Invoices processed","violet"],
+  ["anomalies_detected","Anomalies caught","coral"],
+];
+document.getElementById('kpiGrid').innerHTML = kpiMeta.map(([k,label,color]) => `
+  <div class="kpi" style="--accent:var(--${color})">
+    <div class="lbl">${label}</div>
+    <div class="val mono">${KPI_DATA[k] || 0}</div>
+  </div>`).join('') + `
+  <div class="kpi" style="--accent:var(--teal)">
+    <div class="lbl">Est. sourcing savings</div>
+    <div class="val mono">₹${KPI_DATA.savings_this_cycle_inr.toLocaleString('en-IN')}</div>
+    <div class="sub">vs. naive single-cheapest-supplier baseline</div>
+  </div>`;
+
+// ---------- model metric tiles ----------
+document.getElementById('modelMetrics').innerHTML = `
+  <div class="mtile good"><div class="n">${METRICS.mape_pct}%</div><div class="l">Model MAPE (4wk)</div></div>
+  <div class="mtile"><div class="n">${METRICS.naive_baseline_mape_pct}%</div><div class="l">Naive baseline MAPE</div></div>
+  <div class="mtile good"><div class="n">+${METRICS.accuracy_vs_naive_improvement_pct}pp</div><div class="l">Improvement vs naive</div></div>
+  <div class="mtile"><div class="n">${METRICS.n_train.toLocaleString()}</div><div class="l">Training rows</div></div>
+`;
+
+// ---------- flu vs demand chart ----------
+new Chart(document.getElementById('fluChart'), {
+  type: 'line',
+  data: {
+    labels: CHART_SERIES.map(d => d.week),
+    datasets: [
+      { label: 'Paracetamol demand (units)', data: CHART_SERIES.map(d => d.demand), borderColor: '#22C7B0',
+        backgroundColor: 'rgba(34,199,176,0.08)', fill: true, yAxisID: 'y', tension: 0.3, pointRadius: 0, borderWidth: 2 },
+      { label: 'ILI rate (%)', data: CHART_SERIES.map(d => d.ili), borderColor: '#8B85F5',
+        borderDash: [4,3], yAxisID: 'y1', tension: 0.3, pointRadius: 0, borderWidth: 2 },
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: { legend: { labels: { color: '#8CA0B8', font: {family: 'IBM Plex Mono', size: 10.5} } } },
+    scales: {
+      x: { ticks: { color: '#8CA0B8', maxTicksLimit: 8, font:{size:10} }, grid: { color: 'rgba(140,168,196,0.08)' } },
+      y: { position: 'left', ticks: { color: '#22C7B0', font:{size:10} }, grid: { color: 'rgba(140,168,196,0.08)' } },
+      y1: { position: 'right', ticks: { color: '#8B85F5', font:{size:10} }, grid: { display: false } },
+    }
+  }
+});
+
+// ---------- sensing leaderboard ----------
+function bandClass(b){ return {"Critical":"critical","High":"high","Medium":"medium","Low":"medium"}[b] || "medium"; }
+document.getElementById('sensingBody').innerHTML = SENSING.slice(0,10).map(r => `
+  <tr>
+    <td>${r.medicine_name}</td>
+    <td class="num" style="color:var(--muted)">${r.plant_id}</td>
+    <td><div class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:${r.demand_momentum_score}%;--accent:var(--violet)"></div></div><span class="num">${r.demand_momentum_score}</span></div></td>
+    <td><div class="bar-cell"><div class="bar-track"><div class="bar-fill" style="width:${r.market_need_score}%"></div></div><span class="num">${r.market_need_score}</span></div></td>
+    <td class="num">${r.stock_cover_days.toFixed(1)}d</td>
+    <td><span class="badge ${bandClass(r.need_band)}">${r.need_band}</span></td>
+  </tr>`).join('');
+
+// ---------- allocation cards with explainability & web discovery tag ----------
+document.getElementById('allocGrid').innerHTML = ALLOC.map(a => `
+  <div class="alloc-card" style="${a.is_web_discovered ? 'border-color:var(--violet);' : ''}">
+    <div class="top">
+      <div>
+        <div class="sku">${a.sku_id} · ${a.plant_id} ${a.is_web_discovered ? '<span class="badge approve" style="font-size:9px;padding:2px 5px;">🌐 Web Discovered</span>' : ''}</div>
+        <div class="supplier">${a.supplier_name}</div>
+      </div>
+      <span class="badge ${a.priority.toLowerCase()==='critical'?'critical':a.priority.toLowerCase()==='high'?'high':'medium'}">${a.priority}</span>
+    </div>
+    <div class="metrics">
+      <div>₹${a.unit_price}<span>Unit price</span></div>
+      <div>${a.lead_time_days}d<span>Lead time</span></div>
+      <div>${(a.otd_rate*100).toFixed(0)}%<span>OTD</span></div>
+      <div>${a.allocated_qty.toLocaleString()}<span>Qty</span></div>
+    </div>
+    ${a.allocation_rationale ? `<div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);font-size:11px;color:var(--muted);line-height:1.4;"><strong style="color:var(--teal)">Rationale:</strong> ${a.allocation_rationale}</div>` : ''}
+  </div>`).join('');
+
+// ---------- scenario simulation cards ----------
+if(SCENARIOS && SCENARIOS.supplier_outage){
+  const so = SCENARIOS.supplier_outage;
+  const fs = SCENARIOS.flu_surge;
+  document.getElementById('scenarioGrid').innerHTML = `
+    <div class="alloc-card" style="border-left:3px solid var(--coral)">
+      <div class="top">
+        <div><div class="sku">${so.scenario_name}</div><div class="supplier">${so.description}</div></div>
+        <span class="badge critical">Outage Simulation</span>
+      </div>
+      <div class="metrics" style="grid-template-columns:1fr 1fr;">
+        <div>₹${so.cost_increase_inr.toLocaleString('en-IN')}<span>Landed cost delta</span></div>
+        <div>${so.reallocated_units.toLocaleString()}<span>Units rerouted</span></div>
+      </div>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--muted);line-height:1.4;">${so.summary}</div>
+    </div>
+    <div class="alloc-card" style="border-left:3px solid var(--amber)">
+      <div class="top">
+        <div><div class="sku">${fs.scenario_name}</div><div class="supplier">${fs.description}</div></div>
+        <span class="badge high">Demand Spike</span>
+      </div>
+      <div class="metrics" style="grid-template-columns:1fr 1fr;">
+        <div>+${fs.additional_demand_units.toLocaleString()}<span>Surge demand</span></div>
+        <div>${fs.critical_skus_affected}<span>SKUs impacted</span></div>
+      </div>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--muted);line-height:1.4;">${fs.summary}</div>
+    </div>
+  `;
+}
+
+// ---------- risk table ----------
+document.getElementById('riskBody').innerHTML = RISK.map(r => `
+  <tr>
+    <td>${r.sku_id} · <span style="color:var(--muted)">${r.plant_id}</span></td>
+    <td>${r.supplier_name}</td>
+    <td class="num">${r.risk_score}</td>
+    <td class="num">${r.confidence}</td>
+    <td><span class="badge ${r.decision==='AUTO_APPROVE'?'approve':'escalate'}">${r.decision.replace('_',' ')}</span></td>
+  </tr>`).join('');
+
+// ---------- 3-way match table ----------
+document.getElementById('matchBody').innerHTML = MATCH.map(m => `
+  <tr>
+    <td class="num">${m.po_id}</td>
+    <td>${m.sku_id}</td>
+    <td class="num">${m.po_qty.toLocaleString()}</td>
+    <td class="num">${m.received_qty.toLocaleString()}</td>
+    <td class="num">${m.invoice_qty.toLocaleString()}</td>
+    <td><span class="badge ${m.three_way_match==='MATCH'?'match':'mismatch'}">${m.three_way_match}${m.anomaly_types!=='-'?': '+m.anomaly_types:''}</span></td>
+    <td><span class="badge ${m.payment_status.includes('Auto')?'match':'pending'}">${m.payment_status}</span></td>
+  </tr>`).join('');
+
+// ---------- chatbot ----------
+function renderChat(items){
+  document.getElementById('chatList').innerHTML = items.map(c => `
+    <div class="chat-item"><div class="chat-q">${c.query}</div><div class="chat-a">${c.answer}</div></div>`).join('');
+}
+renderChat(CHAT_DEMO);
+
+function askBot(){
+  const input = document.getElementById('chatInput');
+  const q = input.value.trim();
+  if(!q) return;
+  const ql = q.toLowerCase();
+  let answer = "I can answer: PO status ('status of PO-1002'), reorder questions ('do we need to reorder Paracetamol'), sourcing rationales ('why Apex Pharma?'), what-if scenarios ('what if supplier outage?'), or anomaly questions ('any invoice anomalies?').";
+  if(ql.includes('status') && ql.includes('po')){
+    const hit = MATCH.find(m => ql.includes(m.po_id.toLowerCase()));
+    if(hit){ answer = `${hit.po_id}: ${hit.sku_id}, PO qty ${hit.po_qty}. 3-way match: ${hit.three_way_match}. Payment: ${hit.payment_status}.`; }
+    else { answer = "Couldn't find that PO ID. Try: " + MATCH.map(m=>m.po_id).join(', '); }
+  } else if(ql.includes('why') || ql.includes('rationale') || ql.includes('chosen')){
+    const hit = ALLOC.find(a => ql.includes(a.supplier_name.split(' ')[0].toLowerCase()) || ql.includes(a.sku_id.toLowerCase()));
+    if(hit){ answer = `${hit.supplier_name} (${hit.sku_id} -> ${hit.plant_id}): ${hit.allocation_rationale || 'Chosen based on MILP landed cost minimization.'}`; }
+    else { answer = "MILP sourcing agent balances unit price, lead time, OTD reliability, and capacity limits."; }
+  } else if(ql.includes('what if') || ql.includes('outage') || ql.includes('disruption') || ql.includes('surge')){
+    if((ql.includes('outage') || ql.includes('disruption') || ql.includes('supplier')) && SCENARIOS.supplier_outage){
+      answer = `Scenario Outage Simulation: ${SCENARIOS.supplier_outage.summary}`;
+    } else if((ql.includes('surge') || ql.includes('flu')) && SCENARIOS.flu_surge){
+      answer = `Scenario Flu Surge Simulation: ${SCENARIOS.flu_surge.summary}`;
+    }
+  } else if(ql.includes('reorder') || ql.includes('need')){
+    const hit = REQS.find(r => ql.includes(r.medicine_name.split(' ')[0].toLowerCase()));
+    if(hit){ answer = `Yes — ${hit.medicine_name} needs reorder. Priority: ${hit.priority}. Required qty: ${Math.round(hit.required_qty)}.`; }
+    else { answer = "That SKU isn't currently flagged for reorder."; }
+  } else if(ql.includes('anomal') || ql.includes('fraud')){
+    const bad = MATCH.filter(m => m.three_way_match === 'MISMATCH');
+    answer = bad.length ? `${bad.length} anomaly(ies): ` + bad.map(b=>`${b.po_id} (${b.anomaly_types})`).join('; ') : "No invoice anomalies detected in the current cycle.";
+  }
+  renderChat([...CHAT_DEMO, {query:q, answer}]);
+  input.value = '';
+}
+document.getElementById('chatInput').addEventListener('keydown', e => { if(e.key==='Enter') askBot(); });
+</script>
+</body>
+</html>

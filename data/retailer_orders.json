@@ -1,0 +1,80 @@
+[
+  {
+    "order_id": "RORD-1006",
+    "retailer_id": "ord-20459",
+    "retailer_name": "CarePlus Pharmacy",
+    "location": "Mumbai, Maharashtra",
+    "sku_id": "MED-0001",
+    "medicine_name": "Pharma Batch Order",
+    "quantity": 0,
+    "unit_price": 105.0,
+    "total_amount": 0.0,
+    "status": "Under Review",
+    "created_at": "2026-08-17T22:11:21.868591"
+  },
+  {
+    "order_id": "RORD-1005",
+    "retailer_id": "ord-20458",
+    "retailer_name": "CarePlus Pharmacy",
+    "location": "Mumbai, Maharashtra",
+    "sku_id": "MED-0001",
+    "medicine_name": "Pharma Batch Order",
+    "quantity": 0,
+    "unit_price": 105.0,
+    "total_amount": 0.0,
+    "status": "Under Review",
+    "created_at": "2026-08-17T22:11:20.824023"
+  },
+  {
+    "order_id": "RORD-1004",
+    "retailer_id": "ord-20457",
+    "retailer_name": "CarePlus Pharmacy",
+    "location": "Mumbai, Maharashtra",
+    "sku_id": "MED-0001",
+    "medicine_name": "Pharma Batch Order",
+    "quantity": 0,
+    "unit_price": 105.0,
+    "total_amount": 0.0,
+    "status": "Under Review",
+    "created_at": "2026-08-17T22:11:20.276543"
+  },
+  {
+    "order_id": "RORD-1003",
+    "retailer_id": "ord-20456",
+    "retailer_name": "CarePlus Pharmacy",
+    "location": "Mumbai, Maharashtra",
+    "sku_id": "MED-0005",
+    "medicine_name": "Aceclofenac",
+    "quantity": 2,
+    "unit_price": 495.0,
+    "total_amount": 1087.0,
+    "status": "Released & Shipped",
+    "created_at": "2026-08-17T22:11:18.698410"
+  },
+  {
+    "order_id": "RORD-1002",
+    "retailer_id": "ord-20454",
+    "retailer_name": "CarePlus Pharmacy",
+    "location": "Mumbai, Maharashtra",
+    "sku_id": "MED-0005",
+    "medicine_name": "Aceclofenac",
+    "quantity": 27,
+    "unit_price": 495.0,
+    "total_amount": 11225.0,
+    "status": "Released & Shipped",
+    "created_at": "2026-08-16T20:40:28.561945"
+  },
+  {
+    "order_id": "RORD-1001",
+    "retailer_id": "ord-20453",
+    "retailer_name": "CarePlus Pharmacy",
+    "location": "Mumbai, Maharashtra",
+    "sku_id": "MED-0012",
+    "medicine_name": "Amoxicillin + Clavulanic Acid",
+    "quantity": 30,
+    "unit_price": 540.0,
+    "total_amount": 11681.0,
+    "status": "Released & Shipped",
+    "created_at": "2026-08-16T20:13:21.345102"
+  }
+]

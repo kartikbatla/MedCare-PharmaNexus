@@ -1,0 +1,7 @@
+sku_id,plant_id,supplier_id,supplier_name,allocated_qty,otd_rate,quality_score,p_late_beyond_tolerance,risk_score,confidence,decision,reason
+MED001,PLANT_BLR,SUP_WEB_02,Sun Pharma B2B Sourcing,13546.0,0.985,0.99,0.01,1.2,89.0,AUTO_APPROVE,within risk & confidence tolerance
+MED002,PLANT_MUM,SUP_WEB_04,Cipla Industrial Pharma Direct,5380.0,0.986,0.99,0.01,1.1,89.0,AUTO_APPROVE,within risk & confidence tolerance
+MED001,PLANT_MUM,SUP_WEB_01,Cipla Industrial Pharma Direct,16210.0,0.986,0.992,0.01,1.1,89.0,AUTO_APPROVE,within risk & confidence tolerance
+MED002,PLANT_DEL,SUP_WEB_04,Cipla Industrial Pharma Direct,940.0,0.986,0.99,0.01,1.1,89.0,AUTO_APPROVE,within risk & confidence tolerance
+MED002,PLANT_MUM,IPT_PLANT_KOL,Inter-Plant Transfer (PLANT_KOL -> PLANT_MUM),1778.0,0.995,0.995,0.01,0.7,93.4,AUTO_APPROVE,within risk & confidence tolerance
+MED002,PLANT_DEL,IPT_PLANT_KOL,Inter-Plant Transfer (PLANT_KOL -> PLANT_DEL),1778.0,0.995,0.995,0.01,0.7,93.4,AUTO_APPROVE,within risk & confidence tolerance
